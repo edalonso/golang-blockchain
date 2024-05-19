@@ -114,6 +114,9 @@ spec:
       - name: blockchain-backend-6000
         image: blockchain-backend:0.1
         command: ["sh", "-c", "/tmp/start-blockchain-node.sh 6000 && /app/main startnode"]
+        env:
+          - name: NODE_ID
+            value: "6000"
         resources:
           limits:
             cpu: 200m
@@ -132,6 +135,9 @@ spec:
       - name: blockchain-backend-7000
         image: blockchain-backend:0.1
         command: ["sh", "-c", "/tmp/start-blockchain-node.sh 7000 && /app/main startnode"]
+        env:
+          - name: NODE_ID
+            value: "7000"
         resources:
           limits:
             cpu: 200m
