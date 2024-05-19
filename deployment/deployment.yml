@@ -73,7 +73,7 @@ spec:
             name: start-blockchain-node
       - name: blockchain-backend-4000
         image: blockchain-backend:0.1
-        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 4000 && sleep 50000"]
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 4000"]
         env:
           - name: NODE_ID
             value: "4000"
