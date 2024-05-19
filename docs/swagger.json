@@ -10,11 +10,11 @@
         },
         "version": "1.0"
     },
-    "host": "blockchain.dsboxlab.com",
+    "host": "localhost:30000",
     "basePath": "/api/v1",
     "paths": {
         "/getbalance": {
-            "get": {
+            "post": {
                 "description": "Obtain balance from a given address that belong to address",
                 "consumes": [
                     "application/json"
@@ -26,7 +26,7 @@
                 "parameters": [
                     {
                         "description": "balance",
-                        "name": "address",
+                        "name": "getbalance",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -93,9 +93,6 @@
             "properties": {
                 "address": {
                     "type": "string"
-                },
-                "balance": {
-                    "type": "integer"
                 }
             }
         },
@@ -112,9 +109,6 @@
                     "type": "boolean"
                 },
                 "to": {
-                    "type": "string"
-                },
-                "wallet": {
                     "type": "string"
                 }
             }

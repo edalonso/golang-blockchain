@@ -20,7 +20,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/getbalance": {
-            "get": {
+            "post": {
                 "description": "Obtain balance from a given address that belong to address",
                 "consumes": [
                     "application/json"
@@ -32,7 +32,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "balance",
-                        "name": "address",
+                        "name": "getbalance",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -99,9 +99,6 @@ const docTemplate = `{
             "properties": {
                 "address": {
                     "type": "string"
-                },
-                "balance": {
-                    "type": "integer"
                 }
             }
         },
@@ -119,9 +116,6 @@ const docTemplate = `{
                 },
                 "to": {
                     "type": "string"
-                },
-                "wallet": {
-                    "type": "string"
                 }
             }
         }
@@ -131,7 +125,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "blockchain.dsboxlab.com",
+	Host:             "localhost:30000",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Disashop Blockchain Management API",
