@@ -7,6 +7,7 @@ then
     wallet=$(echo "$address" | awk '{print$4}' | tr -d '\n')
     echo $wallet > /app/tmp/$NODE_ID
     cp -rf /app/tmp/blocks_3000 /app/tmp/blocks_$NODE_ID/
+    sleep 15
 fi
 if [ "$NODE_ID" == "3000" ];
 then
@@ -29,6 +30,5 @@ fi
 if [ "$NODE_ID" == "5000" ];
 then
     echo "Detected node 5000"
-    sleep 15
     /app/main startnode -miner $wallet
 fi
