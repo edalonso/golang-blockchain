@@ -18,6 +18,17 @@ data:
         wallet_4000=$(cat /app/tmp/4000 | tr -d '\n')
         /app/main send -from $wallet_3000 -to $wallet_4000 -amount 10 -mine
     fi
+    if [ "$NODE_ID" == "4000" ];
+    then
+        while true
+        do
+            sleep 60
+            echo "Sync node 4000"
+            /app/main startnode
+            startnode_pid=$!
+            kill $startnode_pid
+        done
+    fi
     if [ "$NODE_ID" == "5000" ];
     then
         echo "Detected node 5000"
