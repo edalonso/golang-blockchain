@@ -18,6 +18,32 @@ spec:
         image: blockchain-backend:0.1
         command: [/app/main, startapi]
         #imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 1323
+          initialDelaySeconds: 45
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: loki
+        ports:
+        - containerPort: 3100
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: 1323
+          initialDelaySeconds: 45
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
         ports:
         - containerPort: 1323
         volumeMounts:
@@ -30,6 +56,13 @@ spec:
           - name: NODE_ID
             value: "3000"
         #imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
         ports:
         - containerPort: 3000
         volumeMounts:
@@ -45,6 +78,13 @@ spec:
           - name: NODE_ID
             value: "4000"
         #imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
         ports:
         - containerPort: 4000
         volumeMounts:
@@ -56,8 +96,51 @@ spec:
       - name: blockchain-backend-5000
         image: blockchain-backend:0.1
         command: ["sh", "-c", "/tmp/start-blockchain-node.sh 5000"]
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
         ports:
         - containerPort: 5000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-6000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 6000 && /app/main startnode"]
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 6000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-7000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 7000 && /app/main startnode"]
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 7000
         volumeMounts:
           - mountPath: /app/tmp
             name: data
@@ -71,6 +154,13 @@ spec:
           - name: NODE_ID
             value: "3000"
         imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 50Mi
         name: init-blockchain
         volumeMounts:
           - mountPath: /tmp
