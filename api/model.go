@@ -2,15 +2,13 @@ package api
 
 type Balance struct {
 	Address   string
-	Balance   int
 }
 
 type SendTransaction struct {
 	From      string
 	To        string
-	Wallet    string
 	Amount    int
-	MineNow      bool
+	MineNow   bool `default:"false"`
 }
 
 type LoggingLevel struct {

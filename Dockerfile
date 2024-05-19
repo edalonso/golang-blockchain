@@ -23,7 +23,7 @@ CMD ["sleep", "infinity"]
 #ENTRYPOINT ["/app/main"]
 
 # Start from scratch image to optimized disk
-FROM scratch
+FROM bash:5.2.26-alpine3.19
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 

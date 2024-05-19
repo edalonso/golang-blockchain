@@ -334,6 +334,7 @@ func HandleTx(request []byte, chain *blockchain.BlockChain) {
 		}
 	} else {
 		if len(memoryPool) >= 2 && len(mineAddress) > 0 {
+			fmt.Printf("Starting to mine...")
 			MineTx(chain)
 		}
 	}

@@ -45,11 +45,11 @@ func (ws *Wallets) GetAllAddresses() []string {
 }
 
 func (ws Wallets) GetWallet(address string) *Wallet {
-	fmt.Println("get wallet")
-	for k, v := range ws.Wallets{
-		fmt.Println("key: ", k)
-		fmt.Println("value: ", v)
-	}
+	//fmt.Println("get wallet")
+	//for k, v := range ws.Wallets{
+	//	fmt.Println("key: ", k)
+	//	fmt.Println("value: ", v)
+	//}
 
 	if ws.Wallets[address] != nil {
 		return ws.Wallets[address]

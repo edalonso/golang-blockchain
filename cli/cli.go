@@ -201,7 +201,7 @@ func (cli *CommandLine) Run() {
 	cli.validateArgs()
 
 	nodeID := os.Getenv("NODE_ID")
-	if nodeID == "" {
+	if nodeID == "" && os.Args[1] != "startapi" {
 		fmt.Printf("NODE_ID env is not set!")
 		runtime.Goexit()
 	}

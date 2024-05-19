@@ -13,7 +13,7 @@ import (
 // @contact.url https://disashop.com
 // @contact.email eduardo.alonso@disashop.com
 
-// @host blockchain.dsboxlab.com
+// @host localhost:30000
 // @BasePath /api/v1
 func main() {
 	defer os.Exit(0)

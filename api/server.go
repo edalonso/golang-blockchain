@@ -115,7 +115,7 @@ func NewRoute() *echo.Echo {
 	// Define the routes
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 	e.GET("/api/v1/health", healthCheck)
-	e.GET("/api/v1/getbalance", getBalance)
+	e.POST("/api/v1/getbalance", getBalance)
         e.POST("/api/v1/sendtransaction", send)
 
 	return e

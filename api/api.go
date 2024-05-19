@@ -17,9 +17,7 @@ import(
 	"net/http"
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
-	"os"
 )
-
 
 func readAllCookies(c echo.Context) error {
 	for _, cookie := range c.Cookies() {
@@ -57,12 +55,12 @@ func healthCheck(c echo.Context) error {
 //Tags            blockchain
 //@Accept         json
 //@Produce        json
-//@Param          address  body  api.Balance true "balance"
+//@Param          getbalance  body  api.Balance true "balance"
 //@Success        200  "ok"
 //@Failure        400  "Bad request"
-//@Router         /getbalance [get]
+//@Router         /getbalance [post]
 func getBalance(c echo.Context) error {
-	nodeID := os.Getenv("NODE_ID")
+	nodeID := "4000"
 	balance := new(Balance)
 	if err := c.Bind(balance); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -76,17 +74,17 @@ func getBalance(c echo.Context) error {
 	UTXOSet := blockchain.UTXOSet{chain}
 	defer chain.Database.Close()
 
-	balance.Balance = 0
+	b := 0
 	pubKeyHash := wallet.Base58Decode([]byte(balance.Address))
 	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
 	UTXOs := UTXOSet.FindUnspentTransactions(pubKeyHash)
 
 	for _, out := range UTXOs {
-		balance.Balance += out.Value
+		b += out.Value
 	}
 
-	log.Infof("Balance of %s: %d\n", balance.Address, balance.Balance)
-	return c.JSON(http.StatusOK, balance)
+	log.Infof("Balance of %s: %d\n", balance.Address, b)
+	return c.JSON(http.StatusOK, b)
 }
 
 // sendTransaction
@@ -101,7 +99,7 @@ func getBalance(c echo.Context) error {
 //@Failure        400  "Bad request"
 //@Router         /sendtransaction [post]
 func send(c echo.Context) error {
-	nodeID := os.Getenv("NODE_ID")
+	nodeID := "4000"
 	sendTransaction := new(SendTransaction)
 	if err := c.Bind(sendTransaction); err != nil {
 		return c.JSON(http.StatusBadRequest, err)
@@ -136,8 +134,9 @@ func send(c echo.Context) error {
 			network.SendTx(network.KnownNodes[0], tx)
 			log.Info("send tx")
 		}
-		return c.JSON(http.StatusOK, "Success!")
+		//network.StartServer(nodeID, "")
 		log.Info("Success!")
+		return c.JSON(http.StatusOK, "Success!")
 	}
 	log.Error("Error! Unable to obtain wallet from address: ", sendTransaction.From)
 	return c.JSON(http.StatusBadRequest, "Error! Unable to obtain wallet from address.")

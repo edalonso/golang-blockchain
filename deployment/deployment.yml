@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-backend
+  labels:
+    app: blockchain-backend
+spec:
+  selector:
+    matchLabels:
+      app: blockchain-backend
+  template:
+    metadata:
+      labels:
+        app: blockchain-backend
+    spec:
+      containers:
+      - name: blockchain-backend-api
+        image: blockchain-backend:0.1
+        command: [/app/main, startapi]
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 1323
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+      - name: blockchain-backend-3000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 3000 && /app/main startnode"]
+        env:
+          - name: NODE_ID
+            value: "3000"
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-4000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 4000 && sleep 50000"]
+        env:
+          - name: NODE_ID
+            value: "4000"
+        #imagePullPolicy: Always
+        ports:
+        - containerPort: 4000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-5000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 5000"]
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      initContainers:
+      - image: blockchain-backend:0.1
+        command: ["sh", "-c", "/start-blockchain-gen.sh"]
+        env:
+          - name: NODE_ID
+            value: "3000"
+        imagePullPolicy: IfNotPresent
+        name: init-blockchain
+        volumeMounts:
+          - mountPath: /tmp
+            name: data
+          - mountPath: /start-blockchain-gen.sh
+            subPath: start-blockchain-gen.sh
+            name: start-blockchain-gen
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: blockchain-backend
+        - name: start-blockchain-gen
+          configMap:
+            name: start-blockchain-gen
+            defaultMode: 0777
+            items:
+              - key: start-blockchain-gen.sh
+                path: start-blockchain-gen.sh
+        - name: start-blockchain-node
+          configMap:
+            name: start-blockchain-node
+            defaultMode: 0777
+            items:
+              - key: start-blockchain-node.sh
+                path: start-blockchain-node.sh
