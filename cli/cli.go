@@ -3,14 +3,20 @@ package cli
 import (
 	"flag"
 	"fmt"
-	"log"
 	"os"
 	"runtime"
 	"strconv"
+	log "github.com/sirupsen/logrus"
+	"context"
+	"io"
+	"os/signal"
+	"syscall"
+	"github.com/pkg/errors"
 
-	"github.com/tensor-programming/golang-blockchain/blockchain"
-	"github.com/tensor-programming/golang-blockchain/network"
-	"github.com/tensor-programming/golang-blockchain/wallet"
+	"blockchain.com/blockchain"
+	"blockchain.com/network"
+	"blockchain.com/wallet"
+	"blockchain.com/api"
 )
 
 type CommandLine struct{}
@@ -25,6 +31,7 @@ func (cli *CommandLine) printUsage() {
 	fmt.Println(" listaddresses - Lists the addresses in our wallet file")
 	fmt.Println(" reindexutxo - Rebuilds the UTXO set")
 	fmt.Println(" startnode -miner ADDRESS - Start a node with ID specified in NODE_ID env. var. -miner enables mining")
+	fmt.Println(" startapi - Start an API server to manage blockchain")
 }
 
 func (cli *CommandLine) validateArgs() {
@@ -32,6 +39,31 @@ func (cli *CommandLine) validateArgs() {
 		cli.printUsage()
 		runtime.Goexit()
 	}
+}
+
+func (cli *CommandLine) StartApi() {
+	ctx, cancel := context.WithCancel(context.Background())
+
+	osSignal := make(chan os.Signal, 1)
+	signal.Notify(osSignal, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		oscall := <-osSignal
+		log.Warnf("Stopping on signal: %s", oscall)
+		cancel()
+	}()
+
+	address, webServerDone, err := api.StartBackgroundServer(ctx)
+	if err != nil {
+		if errors.Is(err, io.EOF) { // FIXME: revise this
+			log.Debugf("Full error: %+v", err)
+			os.Exit(1)
+		} else {
+			log.Fatalf("Failed to start: %+v", err)
+		}
+	}
+	log.Infof("Access API at: %s", address)
+	log.Info("Server started.")
+	<-webServerDone
 }
 
 func (cli *CommandLine) StartNode(nodeID, minerAddress string) {
@@ -146,20 +178,23 @@ func (cli *CommandLine) send(from, to string, amount int, nodeID string, mineNow
 	if err != nil {
 		log.Panic(err)
 	}
+
 	wallet := wallets.GetWallet(from)
-
-	tx := blockchain.NewTransaction(&wallet, to, amount, &UTXOSet)
-	if mineNow {
-		cbTx := blockchain.CoinbaseTx(from, "")
-		txs := []*blockchain.Transaction{cbTx, tx}
-		block := chain.MineBlock(txs)
-		UTXOSet.Update(block)
+	if wallet != nil {
+		tx := blockchain.NewTransaction(wallet, to, amount, &UTXOSet)
+		if mineNow {
+			cbTx := blockchain.CoinbaseTx(from, "")
+			txs := []*blockchain.Transaction{cbTx, tx}
+			block := chain.MineBlock(txs)
+			UTXOSet.Update(block)
+		} else {
+			network.SendTx(network.KnownNodes[0], tx)
+			fmt.Println("send tx")
+		}
+		fmt.Println("Success!")
 	} else {
-		network.SendTx(network.KnownNodes[0], tx)
-		fmt.Println("send tx")
+		fmt.Println("Error! Unable to obtain wallet from address: ", from)
 	}
-
-	fmt.Println("Success!")
 }
 
 func (cli *CommandLine) Run() {
@@ -179,6 +214,7 @@ func (cli *CommandLine) Run() {
 	listAddressesCmd := flag.NewFlagSet("listaddresses", flag.ExitOnError)
 	reindexUTXOCmd := flag.NewFlagSet("reindexutxo", flag.ExitOnError)
 	startNodeCmd := flag.NewFlagSet("startnode", flag.ExitOnError)
+	startApiCmd := flag.NewFlagSet("startapi", flag.ExitOnError)
 
 	getBalanceAddress := getBalanceCmd.String("address", "", "The address to get balance for")
 	createBlockchainAddress := createBlockchainCmd.String("address", "", "The address to send genesis block reward to")
@@ -206,6 +242,11 @@ func (cli *CommandLine) Run() {
 		}
 	case "startnode":
 		err := startNodeCmd.Parse(os.Args[2:])
+		if err != nil {
+			log.Panic(err)
+		}
+	case "startapi":
+		err := startApiCmd.Parse(os.Args[2:])
 		if err != nil {
 			log.Panic(err)
 		}
@@ -280,5 +321,8 @@ func (cli *CommandLine) Run() {
 			runtime.Goexit()
 		}
 		cli.StartNode(nodeID, *startNodeMiner)
+	}
+	if startApiCmd.Parsed() {
+		cli.StartApi()
 	}
 }

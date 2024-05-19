@@ -13,9 +13,9 @@ import (
 	"runtime"
 	"os"
 
-	"gopkg.in/vrecan/death.v3"
+	"github.com/vrecan/death/v3"
 
-	"github.com/tensor-programming/golang-blockchain/blockchain"
+	"blockchain.com/blockchain"
 )
 
 const (
@@ -213,7 +213,7 @@ func HandleBlock(request []byte, chain *blockchain.BlockChain) {
 	blockData := payload.Block
 	block := blockchain.Deserialize(blockData)
 
-	fmt.Println("Recevied a new block!")
+	fmt.Println("Received a new block!")
 	chain.AddBlock(block)
 
 	fmt.Printf("Added block %x\n", block.Hash)
@@ -240,7 +240,7 @@ func HandleInv(request []byte, chain *blockchain.BlockChain) {
 		log.Panic(err)
 	}
 
-	fmt.Printf("Recevied inventory with %d %s\n", len(payload.Items), payload.Type)
+	fmt.Printf("Received inventory with %d %s\n", len(payload.Items), payload.Type)
 
 	if payload.Type == "block" {
 		blocksInTransit = payload.Items

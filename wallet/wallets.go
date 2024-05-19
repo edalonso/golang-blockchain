@@ -44,8 +44,17 @@ func (ws *Wallets) GetAllAddresses() []string {
 	return addresses
 }
 
-func (ws Wallets) GetWallet(address string) Wallet {
-	return *ws.Wallets[address]
+func (ws Wallets) GetWallet(address string) *Wallet {
+	fmt.Println("get wallet")
+	for k, v := range ws.Wallets{
+		fmt.Println("key: ", k)
+		fmt.Println("value: ", v)
+	}
+
+	if ws.Wallets[address] != nil {
+		return ws.Wallets[address]
+	}
+	return nil
 }
 
 func (ws *Wallets) LoadFile(nodeId string) error {
@@ -89,4 +98,5 @@ func (ws *Wallets) SaveFile(nodeId string) {
 	if err != nil {
 		log.Panic(err)
 	}
+	fmt.Println("Saved file: ", walletFile)
 }
