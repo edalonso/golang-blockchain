@@ -1,5 +1,5 @@
 # Start from the latest golang base image
-FROM golang:1.13.15-alpine3.12 as builder
+FROM golang:1.18.10-alpine3.17 as builder
 # Add Maintainer Info
 LABEL maintainer="Eduardo Alonso <eduardo.alonso@disashop.com>"
 
