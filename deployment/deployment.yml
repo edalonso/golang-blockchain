@@ -26,9 +26,6 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-        name: loki
-        ports:
-        - containerPort: 3100
         readinessProbe:
           httpGet:
             path: /api/v1/health
@@ -113,7 +110,7 @@ spec:
             name: start-blockchain-node
       - name: blockchain-backend-6000
         image: blockchain-backend:0.1
-        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 6000 && /app/main startnode"]
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 6000"]
         env:
           - name: NODE_ID
             value: "6000"
@@ -134,7 +131,7 @@ spec:
             name: start-blockchain-node
       - name: blockchain-backend-7000
         image: blockchain-backend:0.1
-        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 7000 && /app/main startnode"]
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 7000"]
         env:
           - name: NODE_ID
             value: "7000"
@@ -147,6 +144,90 @@ spec:
             memory: 100Mi
         ports:
         - containerPort: 7000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-8000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 8000"]
+        env:
+          - name: NODE_ID
+            value: "8000"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-9000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 9000"]
+        env:
+          - name: NODE_ID
+            value: "9000"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-10000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 10000"]
+        env:
+          - name: NODE_ID
+            value: "10000"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 10000
+        volumeMounts:
+          - mountPath: /app/tmp
+            name: data
+          - mountPath: /tmp/start-blockchain-node.sh
+            subPath: start-blockchain-node.sh
+            name: start-blockchain-node
+      - name: blockchain-backend-11000
+        image: blockchain-backend:0.1
+        command: ["sh", "-c", "/tmp/start-blockchain-node.sh 11000"]
+        env:
+          - name: NODE_ID
+            value: "11000"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 11000
         volumeMounts:
           - mountPath: /app/tmp
             name: data
@@ -192,3 +273,59 @@ spec:
             items:
               - key: start-blockchain-node.sh
                 path: start-blockchain-node.sh
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-frontend
+  labels:
+    app: blockchain-frontend
+spec:
+  selector:
+    matchLabels:
+      app: blockchain-frontend
+  template:
+    metadata:
+      labels:
+        app: blockchain-frontend
+    spec:
+      containers:
+      - name: blockchain-frontend
+        image: blockchain-frontend:0.1
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-frontend-micro
+  labels:
+    app: blockchain-frontend-micro
+spec:
+  selector:
+    matchLabels:
+      app: blockchain-frontend-micro
+  template:
+    metadata:
+      labels:
+        app: blockchain-frontend-micro
+    spec:
+      containers:
+      - name: blockchain-frontend-micro
+        image: blockchain-frontend-micro:0.1
+        resources:
+          limits:
+            cpu: 200m
+            memory: 600Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,19 @@
+.content {
+  padding: 16px;
+}
+
+.content>mat-card {
+  margin-bottom: 16px;
+}
+
+.content>mat-card {
+  width: 200px;
+}
+
+.example-footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}

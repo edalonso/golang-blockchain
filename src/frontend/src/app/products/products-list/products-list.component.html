@@ -1,0 +1,11 @@
+<div class="content" fxLayout="row wrap" fxLayoutGap="16px grid">
+  <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%"
+    *ngFor="let product of products">
+    <app-product-single [product]="product"></app-product-single>
+  </div>
+
+</div>
+  <mat-toolbar class="example-footer">
+    <mat-paginator [length]="productsCount" [pageSize]="limit"
+    (page)="cambiarPagina($event)"></mat-paginator>
+  </mat-toolbar>

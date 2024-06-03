@@ -1,0 +1,48 @@
+<mat-toolbar color="primary" fxFlex fxLayout>
+  <mat-toolbar-row fxFlex fxLayoutAlign="flex-end center">
+    <span>XhopChain</span>
+    <span class="toolbar-spacer-mini"></span>
+    <button mat-button [routerLink]="'/products'">
+      <mat-icon aria-hidden="false" aria-label="Productos" fontIcon="store"></mat-icon>Products
+    </button>
+
+    <a routerLink="/microfrontend">
+    <button mat-button routerLink="/microfrontend'">
+      <mat-icon aria-hidden="false" aria-label="microfrontend" fontIcon="shopping_cart" [matBadge]="clicks" [matBadgeHidden]="clicks <= 0" matBadgeColor="accent"></mat-icon>Micro
+    </button>
+    </a>
+    <span class="toolbar-spacer"></span>
+    <button mat-button *ngIf="!(auth.isAuthenticated$ | async)" (click)="login()">
+      <mat-icon aria-hidden="false" aria-label="Log in" fontIcon="login"></mat-icon>Log in
+    </button>
+
+
+    <button mat-icon-button (click)="reloadBalance()" *ngIf="auth.isAuthenticated$ | async">
+      <mat-icon>sync</mat-icon>
+    </button>
+    <span class="mat-body-2 span-monedos" *ngIf="auth.isAuthenticated$ | async" [@fieldUpdated]="fieldState">
+      {{auth.balance$ | async}} MONEDOS
+    </span>
+    <ngx-avatars [matMenuTriggerFor]="userMenu" *ngIf="auth.user$ | async as user" [src]="user.picture"></ngx-avatars>
+
+    <!-- <button mat-button (click)="logout()">
+      <mat-icon aria-hidden="false" aria-label="Log out" fontIcon="logout"></mat-icon>Log out
+    </button> -->
+
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item>
+        <span>{{(auth.user$ | async)?.name}}</span>
+      </button>
+      <button mat-menu-item class="wallet">
+          <mat-icon>wallet</mat-icon>
+          <span>{{(auth.wallet$ | async)}}</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+
+  </mat-toolbar-row>
+
+</mat-toolbar>

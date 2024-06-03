@@ -1,0 +1,44 @@
+mat-card.loading {
+  img {
+    object-fit: cover;
+    /*this makes the image in src fit to the size specified below*/
+    //width: 100%;
+    /* Here you can use wherever you want to specify the width and also the height of the <img>*/
+    //height: 80%;
+    filter: grayscale(blue);
+    opacity: 0.5;
+  }
+
+  mat-card-actions {
+    button span {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+  }
+}
+
+mat-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 50px;
+}
+
+mat-card mat-card-header {
+  mat-card-title {
+    height: 32px;
+  }
+
+  mat-card-subtitle {
+    height: 22px;
+  }
+}
+
+ngx-avatars {
+  opacity: 0.9;
+}
+
+.action-spacer {
+  flex: 1 1 auto;
+}

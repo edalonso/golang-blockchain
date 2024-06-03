@@ -3,16 +3,12 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  extraMounts:
-  - hostPath: ./data
-    containerPath: /home/
   extraPortMappings:
   - containerPort: 30000
     hostPort: 30000
     protocol: TCP
-- role: worker
-- role: worker
-  extraPortMappings:
   - containerPort: 30001
-    hostPort: 1323
+    hostPort: 30001
     protocol: TCP
+- role: worker
+- role: worker
