@@ -1,0 +1,60 @@
+
+<h1 mat-dialog-title>Buy</h1>
+<mat-grid-list cols="3" mat-dialog-content>
+
+  <mat-grid-tile [colspan]="3" [rowspan]="1">
+
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title>{{data.product.id}} - {{data.product.name}}</mat-card-title>
+          <img mat-card-sm-image src="{{data.product.image}}">
+        </mat-card-title-group>
+      </mat-card-header>
+      <mat-card-content >
+        <p>
+          {{data.product.description | slice:0:100}}
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1" >
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title>{{(user$ | async)?.name}}</mat-card-title>
+          <mat-card-subtitle>{{(wallet$ | async)}}</mat-card-subtitle>
+          <img mat-card-sm-image src="{{(user$ | async)?.picture}}">
+        </mat-card-title-group>
+      </mat-card-header>
+
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1"  >
+    <mat-icon>send</mat-icon>{{data.product.price}} MONEDOS
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title>{{data.product.vendor.name}}</mat-card-title>
+          <mat-card-subtitle>{{data.product.vendor.wallet}}</mat-card-subtitle>
+          <img mat-card-sm-image src="{{data.product.vendor.image}}">
+        </mat-card-title-group>
+      </mat-card-header>
+
+    </mat-card>
+  </mat-grid-tile>
+
+
+</mat-grid-list>
+
+<mat-dialog-actions>
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-button color="primary" (click)="buy()" cdkFocusInitial>Ok</button>
+</mat-dialog-actions>
+

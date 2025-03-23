@@ -1,0 +1,377 @@
+basePath: /api/v1
+definitions:
+  api.Credential:
+    properties:
+      environment:
+        enum:
+        - dev
+        - pre
+        - pro
+        type: string
+      lenpassword:
+        type: integer
+      platform:
+        enum:
+        - civo
+        - aws
+        - onprem
+        type: string
+      username:
+        maxLength: 256
+        type: string
+    required:
+    - environment
+    - platform
+    - username
+    type: object
+  api.Databasename:
+    properties:
+      databasename:
+        maxLength: 256
+        type: string
+    type: object
+  api.LoggingLevel:
+    properties:
+      level:
+        enum:
+        - Trace
+        - Debug
+        - Info
+        - Warning
+        - Error
+        - Fatal
+        - Panic
+        type: string
+    required:
+    - level
+    type: object
+  api.LoginRequest:
+    properties:
+      password:
+        maxLength: 1024
+        minLength: 5
+        type: string
+      username:
+        maxLength: 256
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  api.Permission:
+    properties:
+      database:
+        maxLength: 256
+        type: string
+      environment:
+        enum:
+        - dev
+        - pre
+        - pro
+        type: string
+      permission:
+        enum:
+        - Select
+        - Insert
+        - Update
+        - Delete
+        - Alter
+        - References
+        - Control
+        type: string
+      platform:
+        enum:
+        - civo
+        - aws
+        - onprem
+        type: string
+      username:
+        maxLength: 256
+        type: string
+    required:
+    - database
+    - environment
+    - permission
+    - platform
+    - username
+    type: object
+  api.Username:
+    properties:
+      username:
+        maxLength: 256
+        type: string
+    required:
+    - username
+    type: object
+  api.VaultKeyValue:
+    properties:
+      disaproduct:
+        maxLength: 256
+        type: string
+      environment:
+        enum:
+        - dev
+        - pre
+        - pro
+        type: string
+      password:
+        maxLength: 256
+        type: string
+      platform:
+        enum:
+        - civo
+        - aws
+        - onprem
+        type: string
+      variablename:
+        maxLength: 256
+        type: string
+    required:
+    - disaproduct
+    - environment
+    - platform
+    - variablename
+    type: object
+host: secura.disashop.com
+info:
+  contact:
+    email: eduardo.alonso@disashop.com
+    name: Disashop
+    url: https://disashop.com
+  description: Manage MSSqldb in all environments (dev, pre, pro)
+  title: Disashop Database Management API
+  version: "1.0"
+paths:
+  /database/assignpermissionuserindatabase:
+    post:
+      consumes:
+      - application/json
+      description: assign permissions to user in a database
+      parameters:
+      - description: user database and permissions
+        in: body
+        name: permission
+        required: true
+        schema:
+          $ref: '#/definitions/api.Permission'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Assign permissions to user in a database
+  /database/createdatabase:
+    post:
+      consumes:
+      - application/json
+      description: create database
+      parameters:
+      - description: Databasename
+        in: body
+        name: databasename
+        required: true
+        schema:
+          $ref: '#/definitions/api.Databasename'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Create database
+  /database/createrwsqluser:
+    post:
+      consumes:
+      - application/json
+      description: add user to all databases with read and write permission
+      parameters:
+      - description: user credential
+        in: body
+        name: credential
+        required: true
+        schema:
+          $ref: '#/definitions/api.Credential'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Add user to database and grant read and write permission to all databases
+  /database/createsqluser:
+    post:
+      consumes:
+      - application/json
+      description: add user to database
+      parameters:
+      - description: user credential
+        in: body
+        name: credential
+        required: true
+        schema:
+          $ref: '#/definitions/api.Credential'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Add user to database
+  /database/deletedatabase:
+    delete:
+      consumes:
+      - application/json
+      description: delete database
+      parameters:
+      - description: database
+        in: body
+        name: Databasename
+        required: true
+        schema:
+          $ref: '#/definitions/api.Databasename'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Delete database
+  /database/deletesqluser:
+    delete:
+      consumes:
+      - application/json
+      description: delete user to database
+      parameters:
+      - description: username
+        in: body
+        name: username
+        required: true
+        schema:
+          $ref: '#/definitions/api.Username'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Delete user to database
+  /database/executetsqlscript:
+    post:
+      consumes:
+      - multipart/form-data
+      description: upload tsql script and execute it
+      parameters:
+      - description: descriptiontsql script to be executed
+        in: formData
+        name: tsqlscript
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Upload tsql script and execute it
+  /health:
+    get:
+      description: check health about the service to monitor status
+      responses:
+        "200":
+          description: OK
+      summary: Check health about the service to monitor status
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login to API
+      parameters:
+      - description: Login params
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/api.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+      summary: Login to API
+  /loglevel:
+    get:
+      description: obtain log level
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+      summary: Obtain log level
+    post:
+      consumes:
+      - application/json
+      description: change log level in service without restart
+      parameters:
+      - description: log level
+        in: body
+        name: loglevel
+        required: true
+        schema:
+          $ref: '#/definitions/api.LoggingLevel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Change log level in service without restart
+  /vault/insertpassword:
+    post:
+      consumes:
+      - application/json
+      description: insert password in vault
+      parameters:
+      - description: key value in vault
+        in: body
+        name: vaultkeyvalue
+        required: true
+        schema:
+          $ref: '#/definitions/api.VaultKeyValue'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+      summary: Insert password in vault
+swagger: "2.0"

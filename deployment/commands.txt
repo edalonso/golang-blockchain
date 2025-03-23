@@ -1,0 +1,36 @@
+docker run --volume ./tmp/:/app/tmp/ -e NODE_ID=3000 blockchain:test createwallet
+
+docker run --volume ./tmp/:/app/tmp/ -e NODE_ID=4000 blockchain:test createwallet
+
+docker run --volume ./tmp/:/app/tmp/ -e NODE_ID=5000 blockchain:test createwallet
+
+
+docker run --volume ./tmp/:/app/tmp/ -e NODE_ID=3000 blockchain:test createblockchain -address 133d4tzmKrR4wZkHf1wJ9kNhkgFC2u7vyb
+
+
+sudo cp -rf blocks_3000/ blocks_4000/
+
+sudo cp -rf blocks_3000/ blocks_5000/
+
+sudo cp -rf blocks_3000/ blocks_gen/
+
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=3000 blockchain:test send -from 133d4tzmKrR4wZkHf1wJ9kNhkgFC2u7vyb -to 1MKjfMb3gfDvzdbPNxddWjSonoTA1QMUFF -amount 10 -mine
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=3000 blockchain:test startnode
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=5000 blockchain:test startnode
+
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=4000 blockchain:test startnode -miner 1MKjfMb3gfDvzdbPNxddWjSonoTA1QMUFF startnode
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=5000 blockchain:test send -from 1MKjfMb3gfDvzdbPNxddWjSonoTA1QMUFF -to 1EaRryFWKEFhsycbMrZvSm91FrDotLQbMi -amount 1
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=5000 blockchain:test send -from 1EaRryFWKEFhsycbMrZvSm91FrDotLQbMi -to 133d4tzmKrR4wZkHf1wJ9kNhkgFC2u7vyb -amount 1
+
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=5000 blockchain:test getbalance -address 1MKjfMb3gfDvzdbPNxddWjSonoTA1QMUFF
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=5000 blockchain:test getbalance -address 1EaRryFWKEFhsycbMrZvSm91FrDotLQbMi
+
+docker run --volume ./tmp/:/app/tmp/ --network host -e NODE_ID=5000 blockchain:test getbalance -address 133d4tzmKrR4wZkHf1wJ9kNhkgFC2u7vyb

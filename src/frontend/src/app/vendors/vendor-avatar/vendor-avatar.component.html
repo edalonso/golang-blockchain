@@ -1,0 +1,17 @@
+<ngx-avatars [matMenuTriggerFor]="userMenu" [src]="vendor.image" [alt]="vendor.name"
+  [title]="vendor.name"></ngx-avatars>
+<mat-menu #userMenu="matMenu">
+  <mat-card>
+    <mat-card-header>
+      <img mat-card-avatar class="example-header-image" [src]="vendor.image" />
+      <mat-card-title>{{vendor.name}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="description">
+         <mat-icon>wallet</mat-icon>
+        <span>{{vendor.wallet}}</span>
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+</mat-menu>

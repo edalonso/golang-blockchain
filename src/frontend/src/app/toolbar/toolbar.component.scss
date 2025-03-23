@@ -1,0 +1,30 @@
+.toolbar-spacer-mini {
+  flex: 1 1 auto;
+}
+
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.span-monedos {
+  margin-right: 34px;
+}
+
+mat-toolbar {
+  position: sticky;
+  position: -webkit-sticky;
+  /* For macOS/iOS Safari */
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Sets the sticky toolbar to be on top */
+  z-index: 1000;
+  /* Ensure that your app's content doesn't overlap the toolbar */
+
+}
+
+
+.wallet span {
+  font-size: 12px;
+}

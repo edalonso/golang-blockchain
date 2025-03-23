@@ -1,0 +1,76 @@
+basePath: /api/v1
+definitions:
+  api.Balance:
+    properties:
+      address:
+        type: string
+    type: object
+  api.SendTransaction:
+    properties:
+      amount:
+        type: integer
+      from:
+        type: string
+      mineNow:
+        type: boolean
+      to:
+        type: string
+    type: object
+host: localhost:30000
+info:
+  contact:
+    email: eduardo.alonso@disashop.com
+    name: Disashop
+    url: https://disashop.com
+  description: Manage Blockchain
+  title: Disashop Blockchain Management API
+  version: "1.0"
+paths:
+  /getbalance:
+    post:
+      consumes:
+      - application/json
+      description: Obtain balance from a given address that belong to address
+      parameters:
+      - description: balance
+        in: body
+        name: getbalance
+        required: true
+        schema:
+          $ref: '#/definitions/api.Balance'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+      summary: Obtain balance of a wallet
+  /health:
+    get:
+      description: check health about the service to monitor status
+      responses:
+        "200":
+          description: OK
+      summary: Check health about the service to monitor status
+  /sendtransaction:
+    post:
+      consumes:
+      - application/json
+      description: send amount to user from wallet to wallet
+      parameters:
+      - description: transaction
+        in: body
+        name: sendtransaction
+        required: true
+        schema:
+          $ref: '#/definitions/api.SendTransaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+        "400":
+          description: Bad request
+      summary: Send amount to other user
+swagger: "2.0"

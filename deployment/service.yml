@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: blockchain-backend
+spec:
+  selector:
+    app: blockchain-backend
+  ports:
+  - protocol: TCP
+    port: 1323
+    targetPort: 1323
+    name: api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blockchain-frontend
+spec:
+  selector:
+    app: blockchain-frontend
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blockchain-frontend-micro
+spec:
+  selector:
+    app: blockchain-frontend-micro
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    name: http
