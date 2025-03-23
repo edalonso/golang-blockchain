@@ -54,3 +54,5 @@ For more information on Kubernetes, Docker, or kind, please refer to the officia
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [Docker Documentation](https://docs.docker.com/)
 - [kind Documentation](https://kind.sigs.k8s.io/)
+- Check out the Youtube Tutorial for this [Go Program](https://youtu.be/mYlHT9bB6OE). Here is Tensor [Youtube Channel](https://www.youtube.com/channel/UCYqCZOwHbnPwyjawKfE21wg).
+- Tensor [Twitter](https://twitter.com/TensorProgram), [facebook](https://www.facebook.com/Tensor-Programming-1197847143611799/) and [Steemit](https://steemit.com/@tensor).
